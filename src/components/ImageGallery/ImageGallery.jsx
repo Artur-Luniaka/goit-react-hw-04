@@ -4,7 +4,7 @@ import s from "./ImageGallery.module.css";
 const ImageGallery = ({ cards = [] }) => {
   return (
     <>
-      <ul>
+      <ul className={s.list}>
         {cards.map((card) => (
           <li key={card.id}>
             <ImageCard

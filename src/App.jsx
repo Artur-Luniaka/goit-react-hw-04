@@ -13,7 +13,6 @@ const App = () => {
     try {
       const result = await fetchImages(query, 1);
       setImages(result);
-      console.log(setImages(result));
     } catch (error) {
       console.error(error);
     }

@@ -12,5 +12,5 @@ export const fetchImages = async (request, currentPage) => {
     per_page: 15,
   });
   const response = await axios(`?client_id=${ACCESS_KEY}&${searchImages}`);
-  return response.results;
+  return response.data.results;
 };
