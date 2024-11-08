@@ -1,32 +1,10 @@
-.form {
-  max-width: 1280px;
-  margin: 0 auto;
+.box {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
-  padding: 20px 0;
-}
-
-.input {
-  border: 1px solid lightgray;
-  padding: 5px 10px;
-  border-radius: 10px;
-  outline: none;
-  transition: border-color 15ms cubic-bezier(0.075, 0.82, 0.165, 1);
-  &::placeholder {
-    color: lightgrey;
-  }
-  &:hover,
-  &:focus {
-    border-color: lightcoral;
-  }
 }
 
 .button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   padding: 5px 10px;
   border-radius: 10px;
   outline: none;
