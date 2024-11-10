@@ -5,6 +5,8 @@ import SearchBar from "./components/SearchBar/SearchBar";
 import ImageGallery from "./components/ImageGallery/ImageGallery";
 import { useState } from "react";
 import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
+import Loader from "./components/Loader/Loader";
+import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 
 const App = () => {
   const [images, setImages] = useState([]);
@@ -12,12 +14,17 @@ const App = () => {
   const [page, setPage] = useState(1);
   const [totalImages, setTotalImages] = useState(0);
   const [visibleBtn, setVisibleBtn] = useState(false);
+  const [loader, setLoader] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const searchQuery = e.target.elements.searchInput.value;
     setQuery(searchQuery);
     setPage(1);
     try {
+      setErrorMessage(false);
+      setLoader(true);
       const { results, total } = await fetchImages(searchQuery, 1);
       setImages(results);
       setTotalImages(total);
@@ -26,11 +33,16 @@ const App = () => {
     } catch (error) {
       console.error(error);
       setVisibleBtn(false);
+      setErrorMessage(true);
+    } finally {
+      setLoader(false);
     }
   };
 
   const loadMoreImg = async () => {
     try {
+      setErrorMessage(false);
+      setLoader(true);
       const nextPage = page + 1;
       setPage(nextPage);
       const { results: newImages } = await fetchImages(query, nextPage);
@@ -42,13 +54,17 @@ const App = () => {
     } catch (error) {
       console.error(error);
       setVisibleBtn(false);
+      setErrorMessage(true);
+    } finally {
+      setLoader(false);
     }
   };
 
   return (
     <>
       <SearchBar sendQuery={handleSubmit} />
-      <ImageGallery cards={images} />
+      {errorMessage ? <ErrorMessage /> : <ImageGallery cards={images} />}
+      {loader ? <Loader /> : ""}
       {visibleBtn ? <LoadMoreBtn onLoad={loadMoreImg} /> : ""}
     </>
   );
