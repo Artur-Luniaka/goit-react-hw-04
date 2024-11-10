@@ -10,16 +10,18 @@ const App = () => {
   const [images, setImages] = useState([]);
   const [query, setQuery] = useState();
   const [page, setPage] = useState(1);
+  const [totalImages, setTotalImages] = useState(0);
   const [visibleBtn, setVisibleBtn] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const query = e.target.elements.searchInput.value;
-    setQuery(query);
+    const searchQuery = e.target.elements.searchInput.value;
+    setQuery(searchQuery);
     setPage(1);
     try {
-      const result = await fetchImages(query, 1);
-      setImages(result);
-      setVisibleBtn(true);
+      const { results, total } = await fetchImages(searchQuery, 1);
+      setImages(results);
+      setTotalImages(total);
+      setVisibleBtn(results.length > 0 && results.length < total);
       e.target.reset();
     } catch (error) {
       console.error(error);
@@ -31,13 +33,12 @@ const App = () => {
     try {
       const nextPage = page + 1;
       setPage(nextPage);
-      const newImages = await fetchImages(query, nextPage);
+      const { results: newImages } = await fetchImages(query, nextPage);
+
       setImages((prevImages) => [...prevImages, ...newImages]);
-      if (newImages.length <= 0) {
-        setVisibleBtn(false);
-      } else {
-        setVisibleBtn(true);
-      }
+
+      const allLoaded = images.length + newImages.length >= totalImages;
+      setVisibleBtn(!allLoaded);
     } catch (error) {
       console.error(error);
       setVisibleBtn(false);
