@@ -8,6 +8,9 @@ import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
 import Loader from "./components/Loader/Loader";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 import toast, { Toaster } from "react-hot-toast";
+import Modal from "react-modal";
+import ImageModal from "./components/ImageModal/ImageModal";
+Modal.setAppElement("#root");
 
 const App = () => {
   const [images, setImages] = useState([]);
@@ -17,6 +20,8 @@ const App = () => {
   const [visibleBtn, setVisibleBtn] = useState(false);
   const [loader, setLoader] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
+  const [modalImage, setModalImage] = useState(false);
+  const [selectedImage, setSelectedImage] = useState();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -71,6 +76,16 @@ const App = () => {
     }
   };
 
+  const modalOpen = (id) => {
+    const findImage = images.find((image) => image.id === id);
+    setSelectedImage(findImage);
+    setModalImage(true);
+  };
+
+  const modalClose = () => {
+    setModalImage(false);
+  };
+
   return (
     <>
       <Toaster
@@ -82,7 +97,14 @@ const App = () => {
         }}
       />
       <SearchBar sendQuery={handleSubmit} />
-      {errorMessage ? <ErrorMessage /> : <ImageGallery cards={images} />}
+      {errorMessage ? (
+        <ErrorMessage />
+      ) : (
+        <ImageGallery cards={images} openModal={modalOpen} />
+      )}
+      <Modal isOpen={modalImage}>
+        <ImageModal selectedImage={selectedImage} onRequestClose={modalClose} />
+      </Modal>
       {loader ? <Loader /> : ""}
       {visibleBtn ? <LoadMoreBtn onLoad={loadMoreImg} /> : ""}
     </>
