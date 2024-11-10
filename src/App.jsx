@@ -7,6 +7,7 @@ import { useState } from "react";
 import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
 import Loader from "./components/Loader/Loader";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
+import toast, { Toaster } from "react-hot-toast";
 
 const App = () => {
   const [images, setImages] = useState([]);
@@ -19,7 +20,17 @@ const App = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const searchQuery = e.target.elements.searchInput.value;
+    const searchQuery = e.target.elements.searchInput.value.trim();
+    if (searchQuery === "") {
+      toast.error("Please enter your keyword to search field...", {
+        style: {
+          background: "red",
+          color: "white",
+          width: 300,
+        },
+      });
+      return;
+    }
     setQuery(searchQuery);
     setPage(1);
     try {
@@ -62,6 +73,14 @@ const App = () => {
 
   return (
     <>
+      <Toaster
+        containerStyle={{
+          top: 60,
+          left: 10,
+          bottom: 20,
+          right: 20,
+        }}
+      />
       <SearchBar sendQuery={handleSubmit} />
       {errorMessage ? <ErrorMessage /> : <ImageGallery cards={images} />}
       {loader ? <Loader /> : ""}
