@@ -8,9 +8,7 @@ import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
 import Loader from "./components/Loader/Loader";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 import toast, { Toaster } from "react-hot-toast";
-import Modal from "react-modal";
 import ImageModal from "./components/ImageModal/ImageModal";
-Modal.setAppElement("#root");
 
 const App = () => {
   const [images, setImages] = useState([]);
@@ -21,7 +19,7 @@ const App = () => {
   const [loader, setLoader] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
   const [modalImage, setModalImage] = useState(false);
-  const [selectedImage, setSelectedImage] = useState();
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -79,11 +77,17 @@ const App = () => {
   const modalOpen = (id) => {
     const findImage = images.find((image) => image.id === id);
     setSelectedImage(findImage);
-    setModalImage(true);
   };
+
+  useEffect(() => {
+    if (selectedImage) {
+      setModalImage(true);
+    }
+  }, [selectedImage]);
 
   const modalClose = () => {
     setModalImage(false);
+    setSelectedImage(null);
   };
 
   useEffect(() => {
@@ -136,15 +140,14 @@ const App = () => {
       ) : (
         <ImageGallery cards={images} openModal={modalOpen} />
       )}
-      <Modal
+      <ImageModal
+        selectedImage={selectedImage}
         isOpen={modalImage}
         style={customStyles}
         shouldCloseOnEsc={true}
         shouldCloseOnOverlayClick={true}
         onRequestClose={modalClose}
-      >
-        <ImageModal selectedImage={selectedImage} onRequestClose={modalClose} />
-      </Modal>
+      />
       {loader ? <Loader /> : ""}
       {visibleBtn ? <LoadMoreBtn onLoad={loadMoreImg} /> : ""}
     </>
