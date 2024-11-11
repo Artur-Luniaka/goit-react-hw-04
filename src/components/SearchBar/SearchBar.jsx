@@ -1,4 +1,5 @@
 import s from "./SearchBar.module.css";
+import { MdOutlineImageSearch } from "react-icons/md";
 
 const SearchBar = ({ sendQuery }) => {
   return (
@@ -10,11 +11,11 @@ const SearchBar = ({ sendQuery }) => {
             type="text"
             autoComplete="off"
             autoFocus
-            placeholder="Search images and photos"
+            placeholder="Search images and photos..."
             name="searchInput"
           />
           <button className={s.button} type="submit">
-            Search
+            Search <MdOutlineImageSearch />
           </button>
         </form>
       </header>

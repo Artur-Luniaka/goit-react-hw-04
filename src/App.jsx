@@ -3,7 +3,7 @@ import "./App.css";
 import { fetchImages } from "./assets/api";
 import SearchBar from "./components/SearchBar/SearchBar";
 import ImageGallery from "./components/ImageGallery/ImageGallery";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
 import Loader from "./components/Loader/Loader";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
@@ -86,6 +86,40 @@ const App = () => {
     setModalImage(false);
   };
 
+  useEffect(() => {
+    const handleCloseModal = (e) => {
+      if (e.key === "Escape") {
+        modalClose();
+      }
+    };
+    if (modalImage) {
+      window.addEventListener("keydown", handleCloseModal);
+    }
+    return () => {
+      window.removeEventListener("keydown", handleCloseModal);
+    };
+  }, [modalImage]);
+
+  const customStyles = {
+    overlay: {
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      zIndex: 1000,
+    },
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      maxWidth: "800px",
+      padding: "0",
+      backgroundColor: "transparent",
+      borderRadius: "8px",
+      border: "0",
+      overflow: "hidden",
+    },
+  };
   return (
     <>
       <Toaster
@@ -102,7 +136,13 @@ const App = () => {
       ) : (
         <ImageGallery cards={images} openModal={modalOpen} />
       )}
-      <Modal isOpen={modalImage}>
+      <Modal
+        isOpen={modalImage}
+        style={customStyles}
+        shouldCloseOnEsc={true}
+        shouldCloseOnOverlayClick={true}
+        onRequestClose={modalClose}
+      >
         <ImageModal selectedImage={selectedImage} onRequestClose={modalClose} />
       </Modal>
       {loader ? <Loader /> : ""}

@@ -5,6 +5,11 @@
 }
 
 .button {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
   padding: 5px 10px;
   border-radius: 10px;
   outline: none;
@@ -12,9 +17,10 @@
   background-color: lightcoral;
   color: white;
   cursor: pointer;
-  transition: background-color 15ms cubic-bezier(0.075, 0.82, 0.165, 1),
-    outline 15ms cubic-bezier(0.075, 0.82, 0.165, 1),
-    color 15ms cubic-bezier(0.075, 0.82, 0.165, 1);
+  margin-bottom: 20px;
+  transition: background-color 1.5s cubic-bezier(0.075, 0.82, 0.165, 1),
+    outline 1.5s cubic-bezier(0.075, 0.82, 0.165, 1),
+    color 1.5s cubic-bezier(0.075, 0.82, 0.165, 1);
   &:hover,
   &:focus {
     background-color: white;
